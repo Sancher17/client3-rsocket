@@ -1,0 +1,44 @@
+<configuration>
+    <property name="LOG_HOME" value="./log" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/out.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/out/out-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{dd/MM/yyyy HH:mm:ss.SSS} %X{nodeId} [%thread] %-5level %logger{36} %X{correllationId} - %msg%n%ex</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ELASTIC" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/elastic.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/archive/elastic/elastic-%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>{"timestamp": "%d{dd/MM/yyyy HH:mm:ss.SSS}", "nodeId": "%X{nodeId}", "thread": "[%thread]", "loggingLevel": "%-5level", "className": "%logger{36}", "correllationId": "%X{correllationId}", "eventName": "", "eventData": "%msg%ex"}%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n%ex</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework" level="info"/>
+
+    <root level="info">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
